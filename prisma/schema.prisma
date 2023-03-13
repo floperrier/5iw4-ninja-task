@@ -12,10 +12,10 @@ datasource db {
 
 model Task {
   id          Int      @id @default(autoincrement())
-  title       String
+  title       String   @unique
   description String   @default("")
-  dueDate     DateTime @default(now())
-  status      Status   @default(todo)
+  dueDate     String   @default("")
+  status      String   @default("todo")
 }
 
 enum Status {

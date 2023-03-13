@@ -1,8 +1,11 @@
-import { Status } from '@prisma/client';
+import { IsNotEmpty, MinLength } from 'class-validator';
 
 export class CreateTaskDto {
+  @IsNotEmpty()
   title: string;
+  @MinLength(10)
+  @IsNotEmpty()
   description: string;
-  dueDate: Date | string;
-  status: Status;
+  dueDate: string;
+  status: string;
 }

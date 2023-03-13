@@ -4,6 +4,7 @@ import { join } from 'path';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ServerCredentials } from '@grpc/grpc-js';
+import { ValidationPipe } from './validation.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -21,6 +22,7 @@ async function bootstrap() {
       },
     },
   );
+  app.useGlobalPipes(new ValidationPipe());
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   await app.listen();
 }
