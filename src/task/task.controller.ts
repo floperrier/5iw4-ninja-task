@@ -7,7 +7,6 @@ import {
   GetTaskRequest,
   ListTasksRequest,
   ListTasksResponse,
-  Status,
   Task,
   UpdateTaskRequest,
 } from 'src/stubs/task/v1alpha/task';
@@ -45,7 +44,6 @@ export class TaskController {
 
   @GrpcMethod('TaskService')
   async GetTask(request: GetTaskRequest): Promise<Task> {
-    console.log({ request });
     return await this.taskService.findById(request.id);
   }
 
@@ -58,8 +56,6 @@ export class TaskController {
 
   @GrpcMethod('TaskService')
   async DeleteTask(request: DeleteTaskRequest): Promise<Task> {
-    console.log(request);
-    console.log('coucou', { request });
     return await this.taskService.remove(request.id);
   }
 }

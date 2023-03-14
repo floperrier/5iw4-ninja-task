@@ -1,10 +1,7 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 
-export class NotUniqueException extends HttpException {
+export class NotUniqueException extends RpcException {
   constructor() {
-    super(
-      'There is a unique constraint violation, a new task cannot be created',
-      HttpStatus.UNPROCESSABLE_ENTITY,
-    );
+    super('Unique constraint failed');
   }
 }
