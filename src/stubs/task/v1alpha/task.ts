@@ -33,9 +33,9 @@ export interface Task {
      */
     dueDate: string;
     /**
-     * @generated from protobuf field: string status = 5;
+     * @generated from protobuf field: task.v1alpha.Status status = 5;
      */
-    status: string;
+    status: Status;
 }
 // message Task {
 // ! This should be defined elsewere
@@ -144,17 +144,17 @@ export interface DeleteTaskRequest {
  */
 export enum Status {
     /**
-     * @generated from protobuf enum value: STATUS_TODO = 0;
+     * @generated from protobuf enum value: todo = 0;
      */
-    TODO = 0,
+    todo = 0,
     /**
-     * @generated from protobuf enum value: STATUS_DOING = 1;
+     * @generated from protobuf enum value: doing = 1;
      */
-    DOING = 1,
+    doing = 1,
     /**
-     * @generated from protobuf enum value: STATUS_DONE = 2;
+     * @generated from protobuf enum value: done = 2;
      */
-    DONE = 2
+    done = 2
 }
 // @generated message type with reflection information, may provide speed optimized methods
 class Task$Type extends MessageType<Task> {
@@ -164,11 +164,11 @@ class Task$Type extends MessageType<Task> {
             { no: 2, name: "title", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 3, name: "description", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 4, name: "due_date", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 5, name: "status", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 5, name: "status", kind: "enum", T: () => ["task.v1alpha.Status", Status] }
         ]);
     }
     create(value?: PartialMessage<Task>): Task {
-        const message = { id: 0, title: "", description: "", dueDate: "", status: "" };
+        const message = { id: 0, title: "", description: "", dueDate: "", status: 0 };
         globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
         if (value !== undefined)
             reflectionMergePartial<Task>(this, message, value);
@@ -191,8 +191,8 @@ class Task$Type extends MessageType<Task> {
                 case /* string due_date */ 4:
                     message.dueDate = reader.string();
                     break;
-                case /* string status */ 5:
-                    message.status = reader.string();
+                case /* task.v1alpha.Status status */ 5:
+                    message.status = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -218,9 +218,9 @@ class Task$Type extends MessageType<Task> {
         /* string due_date = 4; */
         if (message.dueDate !== "")
             writer.tag(4, WireType.LengthDelimited).string(message.dueDate);
-        /* string status = 5; */
-        if (message.status !== "")
-            writer.tag(5, WireType.LengthDelimited).string(message.status);
+        /* task.v1alpha.Status status = 5; */
+        if (message.status !== 0)
+            writer.tag(5, WireType.Varint).int32(message.status);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

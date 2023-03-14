@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { GrpcMethod } from '@nestjs/microservices';
 import {
@@ -8,8 +8,10 @@ import {
   ListTasksRequest,
   ListTasksResponse,
   Task,
+  Status,
   UpdateTaskRequest,
 } from 'src/stubs/task/v1alpha/task';
+import { Status as prismaStatus } from '@prisma/client';
 
 @Controller()
 export class TaskController {
@@ -24,7 +26,6 @@ export class TaskController {
   @GrpcMethod('TaskService')
   async ListTasks(request: ListTasksRequest): Promise<ListTasksResponse> {
     const tasks = await this.taskService.findAll();
-    console.log({ tasks });
 
     const res = ListTasksResponse.create({
       tasks: tasks.map((t) =>
@@ -32,30 +33,30 @@ export class TaskController {
           id: t.id,
           title: t.title,
           description: t.description,
-          status: t.status,
+          dueDate: t.dueDate,
+          status: Status[t.status],
         }),
       ),
     });
-
-    console.log({ res });
-
     return res;
   }
 
   @GrpcMethod('TaskService')
   async GetTask(request: GetTaskRequest): Promise<Task> {
-    return await this.taskService.findById(request.id);
+    const task = await this.taskService.findById(request.id);
+    return { ...task, status: Status[task.status] };
   }
 
   @GrpcMethod('TaskService')
   async UpdateTask(request: UpdateTaskRequest): Promise<Task> {
-    const task = request.task;
-    console.log({ request });
-    return await this.taskService.update(task.id, task);
+    const task = { ...request.task, status: prismaStatus[request.task.status] };
+    const updatedTask = await this.taskService.update(task.id, task);
+    return { ...updatedTask, status: Status[updatedTask.status] };
   }
 
   @GrpcMethod('TaskService')
   async DeleteTask(request: DeleteTaskRequest): Promise<Task> {
-    return await this.taskService.remove(request.id);
+    const task = await this.taskService.remove(request.id);
+    return { ...task, status: Status[task.status] };
   }
 }
